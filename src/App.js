@@ -1,20 +1,24 @@
 import React, { Component } from "react";
 import { LinePath, Line, Bar } from "@vx/shape";
 import { appleStock } from "@vx/mock-data";
+// http://wiki.jikexueyuan.com/project/d3wiki/scale.html
 import { scaleTime, scaleLinear } from "@vx/scale";
 import { localPoint } from "@vx/event";
 import { extent, max, bisector } from "d3-array";
 
-const stock = appleStock.slice(800);
-
-const xSelector = d => new Date(d.date);
-const ySelector = d => d.close;
+const stock = appleStock.slice(800);   // start from index 800, 480 items
+// Create x/y value from stock data. x = stock.date and y = stock.close
+const xSelector = data => new Date(data.date);
+const ySelector = data => data.close;
+// Determine the exact index that the user is mousing over
 const bisectDate = bisector(xSelector).left;
 
 class App extends Component {
   state = {
     position: null,
   };
+
+  // Calculate index and x 
   handleDrag = ({ event, data, xSelector, xScale, yScale }) => {
     const { x } = localPoint(event);
     const x0 = xScale.invert(x);
@@ -38,6 +42,7 @@ class App extends Component {
       },
     });
   };
+
   render() {
     const { position } = this.state;
     const width = 500;
